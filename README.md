@@ -1,4 +1,5 @@
-<img width="1254" height="1254" alt="00002_waveroamlite_" src="https://github.com/user-attachments/assets/470a1710-7a35-495d-85dd-500054a754a3" />
+<img width="1254" height="1254" alt="WAVE-ROAM-MINI" src="https://github.com/user-attachments/assets/d6e95744-d539-4d27-a869-ff2a179b5f7b" />
+
 <img width="1536" height="1024" alt="00001_waveroamlite_" src="https://github.com/user-attachments/assets/c2105d3c-37b7-475f-a06f-90584cda88f5" />
 # WAVE ROAM LITE
 

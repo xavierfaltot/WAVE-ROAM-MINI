@@ -8,6 +8,7 @@ A simplified experimental-radio journey made as a gift for Franz Xaver in Linz.
 
 ## Concept
 
+<img width="1536" height="1024" alt="WAVE-ROAM-LITE_v01" src="https://github.com/user-attachments/assets/fbd0025d-de10-4746-b911-ffaf61620146" />
 Start in **Linz**. Choose only:
 
 - how many radios make the journey

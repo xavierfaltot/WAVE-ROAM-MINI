@@ -1,31 +1,25 @@
-<!doctype html><meta charset="utf-8">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>WAVE ROAM MINI — Rabbit</title>
+<title>WAVE ROAM MINI — r1</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;background:#050505;color:#ddd;font:10px ui-monospace,monospace;height:100%;overflow:hidden}
-main{height:100dvh;padding:7px;display:grid;grid-template-rows:62px 1fr 58px;gap:7px}
-.top{display:grid;grid-template-columns:62px 1fr;gap:7px}.logo{width:62px;height:62px;object-fit:cover;border-radius:7px}
-.box,.screen,button{border:1px solid #443321;background:#0d0906;border-radius:8px}.box{padding:8px;overflow:hidden}
-.cap{font-size:7px;color:#8b6c49;letter-spacing:.12em}.amber{color:#f0a21b}.red{color:#ee3a2c}
-#nn,#np,#station,#place,#tags,#stream{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#nn{font-size:13px;margin-top:5px}.screen{padding:10px;display:flex;flex-direction:column;justify-content:space-between;min-height:0}
-#place{font-size:8px;color:#d99019;letter-spacing:.1em}#station{font-size:22px;font-weight:800;margin:8px 0 4px}
-#tags{font-size:8px;color:#72706a}#stream{display:block;color:#9f8b70;text-decoration:none;font-size:7px;margin-top:7px;border-top:1px solid #25211c;padding-top:5px}
-.bottomline{display:flex;justify-content:space-between;align-items:end}.time{font-size:15px}
-.state{font-size:7px;color:#777}.led{display:inline-block;width:7px;height:7px;border-radius:50%;background:#49130f;margin-right:4px}.live{background:#ef382c;box-shadow:0 0 8px #ef382c}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:7px}button{color:#ddd;font:700 19px ui-monospace,monospace}button small{display:block;font-size:7px;color:#777;letter-spacing:.1em;margin-top:2px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;background:#050505;color:#ddd;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden}button{touch-action:manipulation}main{width:240px;height:282px;max-width:100vw;max-height:100dvh;margin:auto;padding:6px;display:grid;grid-template-rows:58px 1fr 55px;gap:6px}.top{display:grid;grid-template-columns:58px 1fr;gap:6px}.logo{width:58px;height:58px;object-fit:cover;border-radius:6px}.box,.screen,button{border:1px solid #443321;background:#0d0906;border-radius:7px}.box{padding:7px;overflow:hidden}.cap{font-size:7px;color:#8b6c49;letter-spacing:.12em}.amber{color:#f0a21b}.red{color:#ee3a2c}#nn,#np,#station,#place,#tags,#stream{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#nn{font-size:12px;margin-top:4px}#np{font-size:8px}.screen{padding:9px;display:flex;flex-direction:column;justify-content:space-between;min-height:0}#place{font-size:8px;color:#d99019;letter-spacing:.08em}#station{font-size:20px;line-height:1.02;font-weight:800;margin:7px 0 4px}#tags{font-size:7px;color:#77736d;line-height:1.2}#stream{display:block;color:#9f8b70;text-decoration:none;font-size:7px;margin-top:6px;border-top:1px solid #25211c;padding-top:4px}.bottomline{display:flex;justify-content:space-between;align-items:end}.time{font-size:14px}.state{font-size:7px;color:#777;text-align:right}.led{display:inline-block;width:7px;height:7px;border-radius:50%;background:#49130f;margin-right:4px}.live{background:#ef382c;box-shadow:0 0 8px #ef382c}.controls{display:grid;grid-template-columns:1fr 1fr;gap:6px}button{color:#ddd;font:700 18px ui-monospace,monospace;min-height:55px}button small{display:block;font-size:7px;color:#777;letter-spacing:.08em;margin-top:1px}.hint{font-size:6px;color:#554a3e;margin-top:2px}
 </style>
+</head>
+<body>
 <main>
   <div class="top">
     <img class="logo" src="https://github.com/user-attachments/assets/d6e95744-d539-4d27-a869-ff2a179b5f7b" alt="WAVE ROAM MINI">
-    <div class="box"><div class="cap">NEXT RADIO</div><div id="nn" class="amber">WAITING</div><div id="np">—</div></div>
+    <div class="box"><div class="cap">NEXT RADIO</div><div id="nn" class="amber">WAITING</div><div id="np">—</div><div class="hint">WHEEL ↓ NEXT · SIDE PLAY</div></div>
   </div>
   <div class="screen">
     <div>
       <div id="place">LINZ, AUSTRIA</div>
       <div id="station">RADIO FRO</div>
       <div id="tags">FREE RADIO · COMMUNITY · CULTURE</div>
-      <a id="stream" target="_blank">STREAM · WAITING</a>
+      <a id="stream" target="_blank" rel="noopener">STREAM · WAITING</a>
     </div>
     <div class="bottomline">
       <div><div class="cap">TRAVEL TIME</div><div id="time" class="time">00:00:00</div></div>
@@ -37,24 +31,31 @@ main{height:100dvh;padding:7px;display:grid;grid-template-rows:62px 1fr 58px;gap
     <button id="next" class="amber">▶▶<small>NEXT</small></button>
   </div>
 </main>
-<audio id="a" playsinline></audio><audio id="b" playsinline></audio>
+<audio id="a" playsinline preload="none"></audio><audio id="b" playsinline preload="none"></audio>
 <script>
-const H=["https://de1.api.radio-browser.info","https://nl1.api.radio-browser.info","https://at1.api.radio-browser.info"];
-const T=["experimental","sound art","radio art","community radio","freeform","electroacoustic","ambient","noise","drone","avant-garde","underground","culture","shortwave","electronic"];
+const H=["https://de1.api.radio-browser.info","https://nl1.api.radio-browser.info","https://at1.api.radio-browser.info","https://fi1.api.radio-browser.info"];
+const T=["experimental","sound art","radio art","community radio","free radio","freeform","electroacoustic","field recording","ambient","noise","drone","avant-garde","underground","culture","shortwave","electronic","sound collage","industrial","world music"];
 const PP={name:"PICK POCKET RADIO",city:"BERLIN",country:"GERMANY",tags:"INDEPENDENT · CULTURE · RADIO",url:"https://radio.pickpocketradio.org/stream.mp3",id:"PICK_POCKET_RADIO"};
-const $=x=>document.getElementById(x),A=$("a"),B=$("b");let on=A,off=B,cur=null,nxt=null,started=false,paused=false,start=0,pauseAt=0,pausedMs=0,count=0,pp=false;
-let mem=JSON.parse(localStorage.getItem("wrm100")||"[]");
+const $=x=>document.getElementById(x),A=$("a"),B=$("b");let on=A,off=B,cur=null,nxt=null,started=false,paused=false,start=0,pauseAt=0,pausedMs=0,count=0,pp=false,autoTimer=null;
+let mem=[];try{mem=JSON.parse(localStorage.getItem("wrm100")||"[]")}catch(e){mem=[]}
 function st(t,l=false){$("state").textContent=t;$("led").classList.toggle("live",l)}
 function clock(){if(!started)return;let n=paused?pauseAt:Date.now(),s=Math.max(0,Math.floor((n-start-pausedMs)/1000));$("time").textContent=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,"0")).join(":")}
 setInterval(clock,1000);
-function remember(id){if(!id)return;mem=mem.filter(x=>x!==id);mem.push(id);mem=mem.slice(-100);localStorage.setItem("wrm100",JSON.stringify(mem))}
+function remember(id){if(!id)return;mem=mem.filter(x=>x!==id);mem.push(id);mem=mem.slice(-100);try{localStorage.setItem("wrm100",JSON.stringify(mem))}catch(e){}}
 function show(s){cur=s;$("station").textContent=(s.name||"UNKNOWN").toUpperCase();$("place").textContent=([s.city,s.country].filter(Boolean).join(", ")||"WORLD").toUpperCase();$("tags").textContent=(s.tags||"LIVE RADIO").toUpperCase();$("stream").href=s.url;$("stream").textContent="STREAM · "+s.url}
 async function api(path){for(const h of H){try{let r=await fetch(h+path,{cache:"no-store"});if(r.ok)return await r.json()}catch(e){}}return[]}
 async function fro(){let a=await api("/json/stations/search?name=Radio%20FRO&country=Austria&hidebroken=true&limit=20");let s=a.find(x=>(x.url_resolved||x.url||"").startsWith("https://")&&x.lastcheckok===1);return s&&{name:s.name||"RADIO FRO",city:"LINZ",country:"AUSTRIA",tags:(s.tags||"FREE RADIO,COMMUNITY,CULTURE").split(",").slice(0,4).join(" · "),url:s.url_resolved||s.url,id:s.stationuuid}}
-function ready(el,url){return new Promise(ok=>{let done=false,end=v=>{if(done)return;done=true;ok(v)},yes=()=>end(true),no=()=>end(false);el.oncanplay=yes;el.onloadedmetadata=yes;el.onerror=no;el.src=url;el.load();setTimeout(()=>end(false),9000)})}
-async function find(){let tag=T[Math.floor(Math.random()*T.length)],a=await api("/json/stations/search?tag="+encodeURIComponent(tag)+"&hidebroken=true&order=random&limit=40");for(const s of a.sort(()=>Math.random()-.5)){let u=s.url_resolved||s.url||"",id=s.stationuuid||u;if(!u.startsWith("https://")||!s.lastcheckok||mem.includes(id)||!s.geo_lat||!s.geo_long)continue;if(/top 40|hits|chart|commercial|mainstream/i.test((s.name||"")+" "+(s.tags||"")))continue;return{name:s.name||"UNKNOWN RADIO",city:s.state||"",country:s.country||"",tags:(s.tags||"EXPERIMENTAL").split(",").slice(0,4).join(" · "),url:u,id}}}
-async function prep(){nxt=null;$("nn").textContent="SCANNING";$("np").textContent="NEW SIGNAL";let s=(count>=4&&!pp)?PP:await find();if(!s)return setTimeout(prep,2500);if(await ready(off,s.url)){nxt=s;off._s=s;$("nn").textContent=s.name.toUpperCase();$("np").textContent=([s.city,s.country].filter(Boolean).join(", ")||"READY").toUpperCase()}else setTimeout(prep,2500)}
-async function play(){if(started){if(!paused){on.pause();paused=true;pauseAt=Date.now();st("PAUSE")}else{try{await on.play();paused=false;pausedMs+=Date.now()-pauseAt;st("LIVE",true)}catch(e){st("TAP AGAIN")}}return}st("CONNECTING");let s=await fro();if(!s)return st("NO LINZ");on.src=s.url;try{await on.play()}catch(e){return st("TAP AGAIN")}show(s);remember(s.id);started=true;start=Date.now();st("LIVE",true);prep()}
-async function go(){if(!started||paused)return;if(!nxt){await prep();if(!nxt)return}let s=off._s||nxt;st("LOAD");try{await off.play();on.pause();[on,off]=[off,on];show(s);remember(s.id);if(s.id==="PICK_POCKET_RADIO")pp=true;else count++;nxt=null;st("LIVE",true);prep()}catch(e){st("SIGNAL LOST");nxt=null;prep()}}
-$("play").onclick=play;$("next").onclick=go;
+function ready(el,url){return new Promise(ok=>{let done=false,end=v=>{if(done)return;done=true;el.oncanplay=el.onloadedmetadata=el.onerror=null;ok(v)},yes=()=>end(true),no=()=>end(false);el.oncanplay=yes;el.onloadedmetadata=yes;el.onerror=no;el.src=url;el.load();setTimeout(()=>end(false),8500)})}
+async function find(){for(let tries=0;tries<5;tries++){let tag=T[Math.floor(Math.random()*T.length)],a=await api("/json/stations/search?tag="+encodeURIComponent(tag)+"&hidebroken=true&order=random&limit=50");for(const s of a.sort(()=>Math.random()-.5)){let u=s.url_resolved||s.url||"",id=s.stationuuid||u;if(!u.startsWith("https://")||!s.lastcheckok||mem.includes(id))continue;if(/top 40|hits|chart|commercial|mainstream/i.test((s.name||"")+" "+(s.tags||"")))continue;return{name:s.name||"UNKNOWN RADIO",city:s.state||"",country:s.country||"",tags:(s.tags||tag).split(",").slice(0,4).join(" · "),url:u,id}}}return null}
+async function prep(){nxt=null;$("nn").textContent="SCANNING";$("np").textContent="NEW SIGNAL";let s=(count>=4&&!pp)?PP:await find();if(!s)return setTimeout(prep,2500);if(await ready(off,s.url)){nxt=s;off._s=s;$("nn").textContent=(s.name||"READY").toUpperCase();$("np").textContent=([s.city,s.country].filter(Boolean).join(", ")||"READY").toUpperCase()}else setTimeout(prep,1800)}
+function scheduleAuto(){clearTimeout(autoTimer);if(!started||paused)return;let mins=Math.random()<.15?(3+Math.random()):5+Math.random()*3;autoTimer=setTimeout(()=>go(true),mins*60000)}
+async function play(){if(started){if(!paused){on.pause();paused=true;pauseAt=Date.now();clearTimeout(autoTimer);st("PAUSE")}else{try{await on.play();paused=false;pausedMs+=Date.now()-pauseAt;st("LIVE",true);scheduleAuto()}catch(e){st("TAP AGAIN")}}return}st("CONNECTING");let s=await fro();if(!s)return st("NO LINZ");on.src=s.url;try{await on.play()}catch(e){return st("TAP AGAIN")}show(s);remember(s.id);started=true;start=Date.now();st("LIVE",true);prep();scheduleAuto()}
+async function go(auto=false){if(!started||paused)return;if(!nxt){st("SCANNING");await prep();if(!nxt)return}let s=off._s||nxt;st("LOAD");try{await off.play();let old=on;[on,off]=[off,on];setTimeout(()=>{try{old.pause()}catch(e){}},250);show(s);remember(s.id);if(s.id==="PICK_POCKET_RADIO")pp=true;else count++;nxt=null;st("LIVE",true);prep();scheduleAuto()}catch(e){st("SIGNAL LOST");nxt=null;prep();scheduleAuto()}}
+$("play").onclick=play;$("next").onclick=()=>go(false);
+window.addEventListener("sideClick",()=>play());
+window.addEventListener("scrollDown",()=>go(false));
+window.addEventListener("scrollUp",()=>{ if(started && !paused) play(); else if(started && paused) play(); });
+document.addEventListener("visibilitychange",()=>{if(document.hidden){clearTimeout(autoTimer)}else if(started&&!paused){scheduleAuto()}});
 </script>
+</body>
+</html>

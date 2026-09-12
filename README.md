@@ -1,55 +1,43 @@
-<img width="1254" height="1254" alt="WAVE-ROAM-MINI" src="https://github.com/user-attachments/assets/d6e95744-d539-4d27-a869-ff2a179b5f7b" />
+# WAVE ROAM MINI
 
-<img width="1536" height="1024" alt="00001_waveroamlite_" src="https://github.com/user-attachments/assets/c2105d3c-37b7-475f-a06f-90584cda88f5" />
-# WAVE ROAM LITE
+**A box that makes you travel through the world by radio.**
 
-**A radio that travels for you.**
+WAVE ROAM MINI is an autonomous radio travel machine by Pick Pocket Radio.
 
-A simplified experimental-radio journey made as a gift for Franz Xaver in Linz.
+Every journey starts in **Linz, Austria**, with **Radio FRO**. From there, the machine moves through live independent, community, experimental, freeform, sound-art and local radio signals around the world.
 
-## Concept
+You do not browse a map to find a radio. **The radio makes you travel through the world.**
 
-<img width="1536" height="1024" alt="WAVE-ROAM-LITE_v01" src="https://github.com/user-attachments/assets/fbd0025d-de10-4746-b911-ffaf61620146" />
-Start in **Linz**. Choose only:
+## Current behavior
 
-- how many radios make the journey
-- **VOICE ↔ NO VOICE**
+- Starts in Linz / Radio FRO
+- Infinite journey — no fixed duration
+- PLAY / PAUSE
+- NEXT manual jump
+- Preloads the next radio before switching
+- Shows current radio, city / country, stream URL, tags, postcard and route map
+- Pick Pocket Radio appears once at position 6
+- Rolling memory: no station replay before at least 100 others have been heard
+- PRINT creates a journey log with history, listening time, stream links, postcards and final route map
 
-Then press start and let the machine travel automatically.
+## Web version
 
-There is **no NEXT button**. You do not browse the world. You let the world come to you.
+GitHub Pages:
 
-While one station is playing, the next station is already being found, stream-checked and preloaded.
+`https://xavierfaltot.github.io/WAVE-ROAM-MINI/`
 
-The screen shows:
+## Rabbit version
 
-- current station name
-- city / country
-- a simplified world route map
-- rotating place photos
-- number of radios loaded / remaining
-- journey progress
+A compact version designed for the Rabbit screen is available at:
 
-## Interface direction
+`https://xavierfaltot.github.io/WAVE-ROAM-MINI/rabbit.html`
 
-Physical technological furniture / vintage broadcast console:
-
-- brushed metal + black
-- white plastic mechanical buttons
-- green LED / Raspberry-Pi-style display
-- large left/right selector for **VOICE / NO VOICE**
-- no unnecessary controls
-
-## Core rule
-
-**DURATION = NUMBER OF RADIOS**
-
-The chosen number determines how many stations are preloaded / checked before they arrive on air.
+It keeps the core journey logic with the WAVE ROAM MINI logo, current station, location, direct stream link, travel time, PLAY / PAUSE and NEXT.
 
 ## Tagline
 
-**LET THE WORLD PLAY.**
+**PRESS PLAY. THE WORLD COMES IN.**
 
-## Visual reference
+**THE JOURNEY IS THE WORK.**
 
-The project identity is the WAVE / ROAM / LITE 3×4 illuminated-button panel supplied for the project.
+Pick Pocket Radio · Berlin · 2026

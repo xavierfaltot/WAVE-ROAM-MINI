@@ -1,3 +1,4 @@
+<img width="2111" height="745" alt="ChatGPT Image 11 sept  2026, 23_49_00" src="https://github.com/user-attachments/assets/92a8fb45-88c1-4f47-bcc6-21475e8aa1d3" />
 # WAVE ROAM MINI
 
 **A box that makes you travel through the world by radio.**

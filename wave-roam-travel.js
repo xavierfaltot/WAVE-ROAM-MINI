@@ -1,6 +1,6 @@
 let linzHoldUntil=0;
 let linzHoldRemaining=720000;
-function isLinzOpening(){return currentStation&&/radio\s*fro/i.test(currentStation.name||"")&&/linz/i.test(currentStation.city||"")}
+function linzOpeningLocked(){return completedAfterLinz===0 && linzHoldUntil>0 && Date.now()<linzHoldUntil}
 
 async function prepareNext(){
   if(preparingNext||changingStation||!started)return;preparingNext=true;
@@ -29,9 +29,8 @@ async function prepareNext(){
 function scheduleNext(){
   clearTimeout(moveTimer);if(!started||paused)return;
   let ms;
-  if(isLinzOpening()){
-    ms=Math.max(0,linzHoldUntil-Date.now());
-    if(ms<1000)ms=1000;
+  if(completedAfterLinz===0 && linzHoldUntil>0){
+    ms=Math.max(1000,linzHoldUntil-Date.now());
   }else{
     ms=Math.random()<.10?180000+Math.random()*60000:300000+Math.random()*180000;
   }
@@ -46,7 +45,7 @@ async function seamlessSwap(){
 
 async function changeStation(manual=false){
   if(!started||paused||changingStation)return;
-  if(!manual&&isLinzOpening()&&Date.now()<linzHoldUntil){scheduleNext();return}
+  if(!manual&&linzOpeningLocked()){scheduleNext();return}
   if(!nextStation)await prepareNext();if(!nextStation)return;changingStation=true;
   const target={...(standby._stationMeta||nextStation)},targetSrc=standby.currentSrc||standby.src||target.url||"";setState("loading");
   try{
@@ -69,11 +68,11 @@ function printJourney(){
 function pauseResume(){
   if(!started)return;
   if(!paused){
-    if(isLinzOpening())linzHoldRemaining=Math.max(0,linzHoldUntil-Date.now());
+    if(completedAfterLinz===0&&linzHoldUntil>0)linzHoldRemaining=Math.max(0,linzHoldUntil-Date.now());
     paused=true;pausedAt=Date.now();active.pause();if(standby&&!standby.paused)standby.pause();clearTimeout(moveTimer);playBtn.classList.remove("running");setState("");liveText.textContent="PAUSE";tick();return
   }
   paused=false;totalPausedMs+=Date.now()-pausedAt;
-  if(isLinzOpening())linzHoldUntil=Date.now()+linzHoldRemaining;
+  if(completedAfterLinz===0&&linzHoldRemaining>0)linzHoldUntil=Date.now()+linzHoldRemaining;
   active.muted=false;active.volume=1;active.play().then(()=>{playBtn.classList.add("running");setState("ok");if(nextStation&&standby.src){standby.muted=true;standby.volume=0;standby.play().catch(()=>{nextStation=null;prepareNext()})}scheduleNext();tick()}).catch(()=>setState("err"));
 }
 
@@ -82,7 +81,7 @@ async function startTrip(){
   if(!first){for(const f of FALLBACKS){active.src=f.url;active._stationMeta={...f};try{await active.play();first={...f};break}catch(e){}}}else{active.muted=false;active.volume=1}
   if(!first){setState("err");return}
   started=true;startedAt=Date.now();paused=false;pausedAt=0;totalPausedMs=0;journeyLog=[];stationEnteredAt=null;routeSignature=[];newJourneySeed();completedAfterLinz=0;pickPocketPlayed=false;playBtn.classList.add("running");active._stationMeta={...first};syncActiveStationUI(active._stationMeta);
-  linzHoldRemaining=720000;linzHoldUntil=isLinzOpening()?Date.now()+linzHoldRemaining:0;
+  linzHoldRemaining=720000;linzHoldUntil=Date.now()+linzHoldRemaining;
   if(first.uuid){recent.add(first.uuid);routeSignature.push("LINZ_RADIO_FRO")}else routeSignature.push("LINZ_RADIO_FRO");
   setState("ok");tick();travelTimer=setInterval(tick,1000);standby.pause();standby.muted=true;standby.volume=0;prepareNext();scheduleNext();
 }

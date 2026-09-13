@@ -1,3 +1,7 @@
+let linzHoldUntil=0;
+let linzHoldRemaining=720000;
+function isLinzOpening(){return currentStation&&/radio\s*fro/i.test(currentStation.name||"")&&/linz/i.test(currentStation.city||"")}
+
 async function prepareNext(){
   if(preparingNext||changingStation||!started)return;preparingNext=true;
   try{
@@ -21,19 +25,29 @@ async function prepareNext(){
     setTimeout(()=>{if(started&&!paused&&!nextStation&&!changingStation)prepareNext()},5000);
   }finally{preparingNext=false}
 }
+
 function scheduleNext(){
   clearTimeout(moveTimer);if(!started||paused)return;
-  const isLinzOpening=currentStation&&/radio\s*fro/i.test(currentStation.name||"")&&/linz/i.test(currentStation.city||"");
-  const ms=isLinzOpening?720000:(Math.random()<.10?180000+Math.random()*60000:300000+Math.random()*180000);
-  moveTimer=setTimeout(changeStation,ms);
+  let ms;
+  if(isLinzOpening()){
+    ms=Math.max(0,linzHoldUntil-Date.now());
+    if(ms<1000)ms=1000;
+  }else{
+    ms=Math.random()<.10?180000+Math.random()*60000:300000+Math.random()*180000;
+  }
+  moveTimer=setTimeout(()=>changeStation(false),ms);
 }
+
 async function seamlessSwap(){
   standby.muted=false;standby.volume=0;if(standby.paused)await standby.play();
   const steps=8;for(let i=1;i<=steps;i++){standby.volume=i/steps;active.volume=Math.max(0,1-i/steps);await new Promise(r=>setTimeout(r,35))}
   await new Promise(r=>setTimeout(r,80));active.pause();active.removeAttribute("src");active._stationMeta=null;active.load();active.volume=1;active.muted=false;standby.volume=1;
 }
-async function changeStation(){
-  if(!started||paused||changingStation)return;if(!nextStation)await prepareNext();if(!nextStation)return;changingStation=true;
+
+async function changeStation(manual=false){
+  if(!started||paused||changingStation)return;
+  if(!manual&&isLinzOpening()&&Date.now()<linzHoldUntil){scheduleNext();return}
+  if(!nextStation)await prepareNext();if(!nextStation)return;changingStation=true;
   const target={...(standby._stationMeta||nextStation)},targetSrc=standby.currentSrc||standby.src||target.url||"";setState("loading");
   try{
     await seamlessSwap();const old=active;active=standby;standby=old;target.url=targetSrc||target.url;active._stationMeta={...target};
@@ -43,26 +57,37 @@ async function changeStation(){
   }catch(e){setState("err");if(active.paused){try{active.muted=false;active.volume=1;await active.play()}catch(_){}}nextStation=null}finally{changingStation=false}
   prepareNext();scheduleNext();
 }
-function stopJourney(){if(!started)return;clearTimeout(moveTimer);clearInterval(travelTimer);A.pause();B.pause();closeLogEntry();saveRoute();started=false;paused=false;playBtn.classList.remove("running");document.getElementById("travelClock").textContent="00:00:00";setState("")}
+
+function stopJourney(){if(!started)return;clearTimeout(moveTimer);clearInterval(travelTimer);A.pause();B.pause();closeLogEntry();saveRoute();started=false;paused=false;linzHoldUntil=0;linzHoldRemaining=720000;playBtn.classList.remove("running");document.getElementById("travelClock").textContent="00:00:00";setState("")}
+
 function printJourney(){
   if(!journeyLog.length)return;const html=buildJourneyDocument(),old=document.getElementById("waveRoamPrintFrame");if(old)old.remove();
   const frame=document.createElement("iframe");frame.id="waveRoamPrintFrame";frame.setAttribute("aria-hidden","true");Object.assign(frame.style,{position:"fixed",right:"0",bottom:"0",width:"1px",height:"1px",border:"0",opacity:"0",pointerEvents:"none"});document.body.appendChild(frame);
   const doc=frame.contentDocument||frame.contentWindow.document;doc.open();doc.write(html);doc.close();setTimeout(()=>{try{frame.contentWindow.focus();frame.contentWindow.print()}catch(e){exportJourneyDocument()}},1200);
 }
+
 function pauseResume(){
   if(!started)return;
-  if(!paused){paused=true;pausedAt=Date.now();active.pause();if(standby&&!standby.paused)standby.pause();clearTimeout(moveTimer);playBtn.classList.remove("running");setState("");liveText.textContent="PAUSE";tick();return}
-  paused=false;totalPausedMs+=Date.now()-pausedAt;active.muted=false;active.volume=1;active.play().then(()=>{playBtn.classList.add("running");setState("ok");if(nextStation&&standby.src){standby.muted=true;standby.volume=0;standby.play().catch(()=>{nextStation=null;prepareNext()})}scheduleNext();tick()}).catch(()=>setState("err"));
+  if(!paused){
+    if(isLinzOpening())linzHoldRemaining=Math.max(0,linzHoldUntil-Date.now());
+    paused=true;pausedAt=Date.now();active.pause();if(standby&&!standby.paused)standby.pause();clearTimeout(moveTimer);playBtn.classList.remove("running");setState("");liveText.textContent="PAUSE";tick();return
+  }
+  paused=false;totalPausedMs+=Date.now()-pausedAt;
+  if(isLinzOpening())linzHoldUntil=Date.now()+linzHoldRemaining;
+  active.muted=false;active.volume=1;active.play().then(()=>{playBtn.classList.add("running");setState("ok");if(nextStation&&standby.src){standby.muted=true;standby.volume=0;standby.play().catch(()=>{nextStation=null;prepareNext()})}scheduleNext();tick()}).catch(()=>setState("err"));
 }
+
 async function startTrip(){
   if(started){pauseResume();return}setState("loading");let first=await findRadioFRO();
   if(!first){for(const f of FALLBACKS){active.src=f.url;active._stationMeta={...f};try{await active.play();first={...f};break}catch(e){}}}else{active.muted=false;active.volume=1}
   if(!first){setState("err");return}
   started=true;startedAt=Date.now();paused=false;pausedAt=0;totalPausedMs=0;journeyLog=[];stationEnteredAt=null;routeSignature=[];newJourneySeed();completedAfterLinz=0;pickPocketPlayed=false;playBtn.classList.add("running");active._stationMeta={...first};syncActiveStationUI(active._stationMeta);
+  linzHoldRemaining=720000;linzHoldUntil=isLinzOpening()?Date.now()+linzHoldRemaining:0;
   if(first.uuid){recent.add(first.uuid);routeSignature.push("LINZ_RADIO_FRO")}else routeSignature.push("LINZ_RADIO_FRO");
   setState("ok");tick();travelTimer=setInterval(tick,1000);standby.pause();standby.muted=true;standby.volume=0;prepareNext();scheduleNext();
 }
-playBtn.addEventListener("click",startTrip);stopBtn.addEventListener("click",stopJourney);printBtn.addEventListener("click",printJourney);nextBtn.addEventListener("click",async()=>{if(!started||paused)return;clearTimeout(moveTimer);if(!nextStation){document.getElementById("nextRadioName").textContent="SCANNING";document.getElementById("nextRadioPlace").textContent="CURRENT RADIO KEEPS PLAYING";await prepareNext()}if(nextStation)await changeStation()});
+
+playBtn.addEventListener("click",startTrip);stopBtn.addEventListener("click",stopJourney);printBtn.addEventListener("click",printJourney);nextBtn.addEventListener("click",async()=>{if(!started||paused)return;clearTimeout(moveTimer);if(!nextStation){document.getElementById("nextRadioName").textContent="SCANNING";document.getElementById("nextRadioPlace").textContent="CURRENT RADIO KEEPS PLAYING";await prepareNext()}if(nextStation)await changeStation(true)});
 function hardSyncFromPlayingElement(el){if(el!==active||!el._stationMeta)return;syncActiveStationUI(el._stationMeta)}
 A.addEventListener("playing",()=>hardSyncFromPlayingElement(A));B.addEventListener("playing",()=>hardSyncFromPlayingElement(B));A.addEventListener("error",()=>{if(A===active)setState("err")});B.addEventListener("error",()=>{if(B===active)setState("err")});
 fullscreenBtn.addEventListener("click",async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}});document.addEventListener("fullscreenchange",()=>document.body.classList.toggle("fullscreen-mode",!!document.fullscreenElement));
